@@ -79,7 +79,7 @@ npx prisma generate
 ### 6. Run the development server
 
 ```bash
-npm run dev
+npm run dev || npm run start
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
