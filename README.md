@@ -1,36 +1,166 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Photo Gallery
+
+A modern photo gallery application built with Next.js 16, featuring image uploads via Cloudinary and a PostgreSQL database powered by Prisma 7.
+
+## Features
+
+- 📸 Photo upload and management with Cloudinary integration
+- 💬 Comment system for photos
+- 🗄️ PostgreSQL database with Prisma ORM
+- 🎨 Styled with Tailwind CSS and Ant Design components
+- ⚡ Built with Next.js 16 App Router
+- 🔄 Real-time updates with React 19
+
+## Tech Stack
+
+- **Framework:** Next.js 16.0.4
+- **React:** 19.2.0
+- **Database:** PostgreSQL
+- **ORM:** Prisma 7.0.1 with pg adapter
+- **Image Storage:** Cloudinary
+- **Styling:** Tailwind CSS 4 + Ant Design 6
+- **Language:** TypeScript
+
+## Prerequisites
+
+- Node.js 20+ 
+- PostgreSQL database
+- Cloudinary account
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd photo-gallery
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Set up environment variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Database
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname?schema=photo_gallery
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+### 4. Set up the database
+
+Run Prisma migrations to create the database schema:
+
+```bash
+npx prisma migrate dev
+```
+
+Or reset the database if needed:
+
+```bash
+npx prisma migrate reset
+```
+
+### 5. Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+### 6. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database Schema
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Photo Model
+- `id`: String (CUID)
+- `title`: String
+- `imageData`: Text (Cloudinary URL)
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
+- `comments`: Comment[] (relation)
 
-## Learn More
+### Comment Model
+- `id`: String (CUID)
+- `content`: Text
+- `photoId`: String (foreign key)
+- `photo`: Photo (relation)
+- `createdAt`: DateTime
 
-To learn more about Next.js, take a look at the following resources:
+## API Routes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Photos
+- `GET /api/photos` - Get all photos with comments
+- `POST /api/photos` - Create a new photo
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Comments
+- `POST /api/photos/[id]/comments` - Add a comment to a photo
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+photo-gallery/
+├── prisma/
+│   ├── schema.prisma          # Prisma schema definition
+│   └── migrations/            # Database migrations
+├── src/
+│   ├── app/
+│   │   ├── api/              # API routes
+│   │   │   └── photos/
+│   │   ├── globals.css       # Global styles
+│   │   ├── layout.tsx        # Root layout
+│   │   └── page.tsx          # Home page
+│   ├── components/
+│   │   ├── CommentSection.tsx
+│   │   ├── PhotoCard.tsx
+│   │   └── PhotoUpload.tsx
+│   ├── lib/
+│   │   ├── cloudinary.ts     # Cloudinary configuration
+│   │   └── prisma.ts         # Prisma client instance
+│   └── types/
+│       └── index.ts          # TypeScript type definitions
+├── prisma.config.ts          # Prisma configuration
+└── package.json
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Development
+
+### Prisma Studio
+
+Open Prisma Studio to view and edit your database:
+
+```bash
+npx prisma studio
+```
+
+### Build for production
+
+```bash
+npm run build
+npm start
+```
+
+## Notes
+
+- This project uses Prisma 7 with the PostgreSQL adapter (`@prisma/adapter-pg`)
+- The database schema is configured to use a custom schema named `photo_gallery`
+- Cloudinary is used for image storage and transformation
+- The application uses Next.js 16 App Router with React Server Components
+
+## License
+
+MIT
